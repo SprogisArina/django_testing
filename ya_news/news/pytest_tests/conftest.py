@@ -9,6 +9,11 @@ from django.utils import timezone
 from news.models import Comment, News
 
 
+@pytest.fixture(autouse=True)
+def db_connection(db):
+    pass
+
+
 @pytest.fixture
 def author(django_user_model):
     return django_user_model.objects.create(username='Автор')

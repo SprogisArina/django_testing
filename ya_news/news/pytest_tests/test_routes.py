@@ -5,7 +5,6 @@ from django.urls import reverse
 from pytest_django.asserts import assertRedirects
 
 
-@pytest.mark.django_db
 @pytest.mark.parametrize(
     'name, args',
     (
@@ -22,7 +21,6 @@ def test_pages_availability_for_anonymous_user(client, name, args):
     assert response.status_code == HTTPStatus.OK
 
 
-@pytest.mark.django_db
 @pytest.mark.parametrize(
     'parametrized_client, expected_status',
     (
@@ -42,7 +40,6 @@ def test_pages_availability_for_auth_user(
     assert response.status_code == expected_status
 
 
-@pytest.mark.django_db
 @pytest.mark.parametrize(
     'name',
     ('news:edit', 'news:delete')

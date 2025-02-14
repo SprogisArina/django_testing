@@ -8,7 +8,6 @@ from news.forms import BAD_WORDS, WARNING
 from news.models import Comment
 
 
-@pytest.mark.django_db
 def test_anonymous_user_cant_create_comment(
     client, news_pk_for_args, comment_form
 ):
@@ -81,7 +80,6 @@ def test_user_cant_delete_comment_of_another_user(
     assert comments_count == 1
 
 
-@pytest.mark.django_db
 def test_user_cant_edit_comment_of_another_user(
         comment_pk_for_args, comment_form, not_author_client, comment
 ):
