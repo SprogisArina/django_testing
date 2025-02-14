@@ -40,28 +40,36 @@ def not_author_client(not_author):
 
 @pytest.fixture
 def news():
-    news = News.objects.create(title='Заголовок', text='Текст')
-    return news
+    return News.objects.create(title='Заголовок', text='Текст')
 
 
 @pytest.fixture
 def comment(news, author):
-    comment = Comment.objects.create(
+    return Comment.objects.create(
         news=news,
         author=author,
         text='Текст комментария'
     )
-    return comment
 
 
 @pytest.fixture
-def news_pk_for_args(news):
-    return (news.id,)
+def home_url():
+    return reverse('news:home')
 
 
 @pytest.fixture
-def comment_pk_for_args(comment):
-    return (comment.id,)
+def detail_url(news):
+    return reverse('news:detail', args=(news.id,))
+
+
+@pytest.fixture
+def comment_delete_url(comment):
+    return reverse('news:delete', args=(comment.id,))
+
+
+@pytest.fixture
+def comment_edit_url(comment):
+    return reverse('news:edit', args=(comment.id,))
 
 
 @pytest.fixture
@@ -75,28 +83,20 @@ def many_news():
         )
         for index in range(settings.NEWS_COUNT_ON_HOME_PAGE + 1)
     ]
-    return News.objects.bulk_create(all_news)
-
-
-@pytest.fixture
-def home_object_list(client, many_news):
-    response = client.get(reverse('news:home'))
-    return response.context['object_list']
+    News.objects.bulk_create(all_news)
 
 
 @pytest.fixture
 def many_comments(author, news):
     now = timezone.now()
-    all_comments = [
-        Comment(
+    for index in range(10):
+        comment = Comment.objects.create(
             news=news,
             author=author,
-            text='Просто текст.',
-            created=now - timedelta(days=index)
+            text=f'Комментарий {index}.'
         )
-        for index in range(10)
-    ]
-    return Comment.objects.bulk_create(all_comments)
+        comment.created = now - timedelta(days=index)
+        comment.save()
 
 
 @pytest.fixture

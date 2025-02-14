@@ -4,19 +4,19 @@ import pytest
 from django.urls import reverse
 from pytest_django.asserts import assertRedirects
 
+HOME_URL = pytest.lazy_fixture('home_url')
+DETAIL_URL = pytest.lazy_fixture('detail_url')
+COMMENT_DELETE_URL = pytest.lazy_fixture('comment_delete_url')
+COMMENT_EDIT_URL = pytest.lazy_fixture('comment_edit_url')
+LOGIN_URL = reverse('users:login')
+
 
 @pytest.mark.parametrize(
-    'name, args',
-    (
-        ('news:home', None),
-        ('news:detail', pytest.lazy_fixture('news_pk_for_args')),
-        ('users:login', None),
-        ('users:logout', None),
-        ('users:signup', None),
-    ),
+    'url',
+    (HOME_URL, DETAIL_URL, LOGIN_URL,
+     reverse('users:logout'), reverse('users:signup'))
 )
-def test_pages_availability_for_anonymous_user(client, name, args):
-    url = reverse(name, args=args)
+def test_pages_availability_for_anonymous_user(client, url):
     response = client.get(url)
     assert response.status_code == HTTPStatus.OK
 
@@ -29,24 +29,21 @@ def test_pages_availability_for_anonymous_user(client, name, args):
     )
 )
 @pytest.mark.parametrize(
-    'name',
-    ('news:edit', 'news:delete')
+    'url',
+    (COMMENT_EDIT_URL, COMMENT_DELETE_URL)
 )
 def test_pages_availability_for_auth_user(
-        comment_pk_for_args, parametrized_client, expected_status, name
+        parametrized_client, expected_status, url
 ):
-    url = reverse(name, args=comment_pk_for_args)
     response = parametrized_client.get(url)
     assert response.status_code == expected_status
 
 
 @pytest.mark.parametrize(
-    'name',
-    ('news:edit', 'news:delete')
+    'url',
+    (COMMENT_EDIT_URL, COMMENT_DELETE_URL)
 )
-def test_redirect_for_anonymous_client(client, name, comment_pk_for_args):
-    login_url = reverse('users:login')
-    url = reverse(name, args=comment_pk_for_args)
-    expected_url = f'{login_url}?next={url}'
+def test_redirect_for_anonymous_client(client, url):
+    expected_url = f'{LOGIN_URL}?next={url}'
     response = client.get(url)
     assertRedirects(response, expected_url)

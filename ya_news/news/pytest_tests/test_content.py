@@ -6,21 +6,24 @@ from django.urls import reverse
 from news.forms import CommentForm
 
 
-def test_news_count(home_object_list):
-    object_list = home_object_list
+def test_news_count(client, many_news, home_url):
+    response = client.get(home_url)
+    assert 'object_list' in response.context
+    object_list = response.context['object_list']
     news_count = object_list.count()
     assert news_count == settings.NEWS_COUNT_ON_HOME_PAGE
 
 
-def test_news_order(home_object_list):
-    object_list = home_object_list
+def test_news_order(client, many_news, home_url):
+    response = client.get(home_url)
+    assert 'object_list' in response.context
+    object_list = response.context['object_list']
     all_dates = [news.date for news in object_list]
     sorted_dates = sorted(all_dates, reverse=True)
     assert all_dates == sorted_dates
 
 
-def test_comments_order(client, news, news_pk_for_args, many_comments):
-    detail_url = reverse('news:detail', args=news_pk_for_args)
+def test_comments_order(client, news, detail_url, many_comments):
     response = client.get(detail_url)
     assert 'news' in response.context
     all_comments = news.comment_set.all()
@@ -36,9 +39,6 @@ def test_comments_order(client, news, news_pk_for_args, many_comments):
         (pytest.lazy_fixture('not_author_client'), True)
     )
 )
-def test_different_client_has_form(news_pk_for_args, user, form_status):
-    detail_url = reverse('news:detail', args=news_pk_for_args)
+def test_different_client_has_form(detail_url, user, form_status):
     response = user.get(detail_url)
-    assert ('form' in response.context) == form_status
-    if form_status:
-        assert isinstance(response.context['form'], CommentForm)
+    assert isinstance(response.context.get('form'), CommentForm) == form_status
