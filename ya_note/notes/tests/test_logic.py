@@ -42,6 +42,7 @@ class TestNoteCreation(Base):
         self.assertEqual(note.author, self.not_author)
 
     def test_slug_is_unique(self):
+        initial_notes_count = Note.objects.count()
         response = self.not_author_client.post(ADD_URL, data=self.form_data)
         self.assertFormError(
             response,
@@ -50,7 +51,7 @@ class TestNoteCreation(Base):
             errors=SLUG + WARNING
         )
         notes_count = Note.objects.count()
-        self.assertEqual(notes_count, 1)
+        self.assertEqual(notes_count, initial_notes_count)
 
     def test_empty_slug(self):
         Note.objects.all().delete()

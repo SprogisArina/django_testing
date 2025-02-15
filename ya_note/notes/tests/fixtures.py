@@ -15,6 +15,8 @@ DELETE_URL = reverse('notes:delete', args=(SLUG,))
 LIST_URL = reverse('notes:list')
 SUCCESS_URL = reverse('notes:success')
 LOGIN_URL = reverse('users:login')
+LOGOUT_URL = reverse('users:logout')
+SIGNUP_URL = reverse('users:signup')
 User = get_user_model()
 
 

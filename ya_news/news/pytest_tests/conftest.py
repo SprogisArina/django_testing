@@ -58,6 +58,21 @@ def home_url():
 
 
 @pytest.fixture
+def login_url():
+    return reverse('users:login')
+
+
+@pytest.fixture
+def logout_url():
+    return reverse('users:logout')
+
+
+@pytest.fixture
+def signup_url():
+    return reverse('users:signup')
+
+
+@pytest.fixture
 def detail_url(news):
     return reverse('news:detail', args=(news.id,))
 

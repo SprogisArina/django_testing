@@ -8,13 +8,13 @@ HOME_URL = pytest.lazy_fixture('home_url')
 DETAIL_URL = pytest.lazy_fixture('detail_url')
 COMMENT_DELETE_URL = pytest.lazy_fixture('comment_delete_url')
 COMMENT_EDIT_URL = pytest.lazy_fixture('comment_edit_url')
-LOGIN_URL = reverse('users:login')
-
+LOGIN_URL = pytest.lazy_fixture('login_url')
+LOGOUT_URL = pytest.lazy_fixture('logout_url')
+SIGNUP_URL = pytest.lazy_fixture('signup_url')
 
 @pytest.mark.parametrize(
     'url',
-    (HOME_URL, DETAIL_URL, LOGIN_URL,
-     reverse('users:logout'), reverse('users:signup'))
+    (HOME_URL, DETAIL_URL, LOGIN_URL, LOGOUT_URL, SIGNUP_URL)
 )
 def test_pages_availability_for_anonymous_user(client, url):
     response = client.get(url)
