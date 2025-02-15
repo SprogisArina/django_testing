@@ -1,7 +1,5 @@
 from http import HTTPStatus
 
-from django.urls import reverse
-
 from notes.tests.fixtures import (
     Base, HOME_URL, ADD_URL, EDIT_URL, DETAIL_URL, DELETE_URL, LIST_URL,
     SUCCESS_URL, LOGIN_URL, LOGOUT_URL, SIGNUP_URL

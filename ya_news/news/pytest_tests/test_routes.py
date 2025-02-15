@@ -1,7 +1,6 @@
 from http import HTTPStatus
 
 import pytest
-from django.urls import reverse
 from pytest_django.asserts import assertRedirects
 
 HOME_URL = pytest.lazy_fixture('home_url')
@@ -11,6 +10,7 @@ COMMENT_EDIT_URL = pytest.lazy_fixture('comment_edit_url')
 LOGIN_URL = pytest.lazy_fixture('login_url')
 LOGOUT_URL = pytest.lazy_fixture('logout_url')
 SIGNUP_URL = pytest.lazy_fixture('signup_url')
+
 
 @pytest.mark.parametrize(
     'url',
