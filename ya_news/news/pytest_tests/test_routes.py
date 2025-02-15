@@ -43,7 +43,7 @@ def test_pages_availability_for_auth_user(
     'url',
     (COMMENT_EDIT_URL, COMMENT_DELETE_URL)
 )
-def test_redirect_for_anonymous_client(client, url):
-    expected_url = f'{LOGIN_URL}?next={url}'
+def test_redirect_for_anonymous_client(client, url, login_url):
+    expected_url = f'{login_url}?next={url}'
     response = client.get(url)
     assertRedirects(response, expected_url)
